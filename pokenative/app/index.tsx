@@ -23,8 +23,8 @@ export default function Index() {
         <FlatList 
           data={pokemon} 
           numColumns={3}
-          columnWrapperStyle={ styles.gridGap }
-          renderItem={({item}) => <Card style={{flex: 1/3}}>
+          columnWrapperStyle={ [styles.gridGap, styles.list]}
+          renderItem={({item}) => <Card style={{flex: 1/3, height: 200}}>
           <Text>{item.name}</Text>
         </Card>} keyExtractor={(item) => item.id.toString()}/>
       </Card>
@@ -48,6 +48,9 @@ const styles = StyleSheet.create({
   },
   gridGap: {
     gap: 8,
+  },
+  list: {
+    padding: 12,
   }
 })
 
