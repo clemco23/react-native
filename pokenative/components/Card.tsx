@@ -14,4 +14,4 @@ const styles = {
     borderRadius: 8,
     marginTop: 0.5,
     ...Shadows.dp2,
-}
+} satisfies ViewStyle
