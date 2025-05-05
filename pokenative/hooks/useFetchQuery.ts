@@ -1,17 +1,42 @@
-import { useQuery } from "@tanstack/react-query";
+import {useInfiniteQuery , useQuery } from "@tanstack/react-query";
 
 const endpoint = 'https://pokeapi.co/api/v2/';
 
-export function useFetchQuery(url: string) {
+export function useFetchQuery(path: string) {
   return useQuery({
-    queryKey: [url],
+    queryKey: [path],
     queryFn: async () => {
       await wait(1);
-      const response = await fetch(endpoint + url);
-      if (!response.ok) throw new Error('Failed to fetch');
-      return response.json();
+      const response = await fetch(endpoint + path, {
+        headers: {
+            Accept: 'application/json',
+        }
+      });
+    
     }
   });
+}
+
+export function useInfiniteFetchQuery(path: string) {
+    return useInfiniteQuery({
+        queryKey: [path],
+        initialPageParam: endpoint + path,
+        queryFn: async ({pageParam}) => {
+            await wait(1)
+            return fetch(pageParam, {
+                headers: {
+                    Accept: 'application/json',
+                }
+            }).then(r => r.json())
+        },
+        getNextPageParam: (lastPage) => {
+            if ("next" in lastPage) {
+                return lastPage.next
+
+            }
+            return null
+        }
+    })
 }
 
 function wait(duration: number) {
