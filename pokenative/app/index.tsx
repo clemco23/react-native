@@ -5,16 +5,16 @@ import { ThemedText } from "@/components/ThemedText";
 import { useThemeColors } from '@/hooks/useThemeColors'; 
 import { Card } from "@/components/Card";
 import { PokemonCard } from '@/components/pokemon/PokemonCard';
+import { useFetchQuery } from "@/hooks/useFetchQuery";
+import { getPokemonId } from "@/functions/pokemon";
 
 
 
 
 export default function Index() {
   const colors = useThemeColors()
-  const pokemon = Array.from({length:35}, (_, k) => ({
-    id: k + 1,
-    name: 'pokemon name'
-  }))
+  const {data} = useFetchQuery('pokemon?limit=21')
+  const pokemons = data?.results ?? []
   return (
     <SafeAreaView style={[styles.container, {backgroundColor: colors.tint}]}>
       <View style={styles.header}>
@@ -23,10 +23,10 @@ export default function Index() {
       </View>
       <Card style={styles.body}>
         <FlatList 
-          data={pokemon} 
+          data={pokemons} 
           numColumns={3}
           columnWrapperStyle={ [styles.gridGap, styles.list]}
-          renderItem={({item}) => <PokemonCard id={item.id} name={item.name} style={{flex: 1/3}}/>} keyExtractor={(item) => item.id.toString()}/>
+          renderItem={({item}) => <PokemonCard id={getPokemonId(item.url)} name={item.name} style={{flex: 1/3}}/>} keyExtractor={(item) => item.url}/>
       </Card>
     </SafeAreaView>
   );
